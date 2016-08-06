@@ -91,6 +91,7 @@ router.post('/update', function(req, res, next) {
 
                     if (dis <= 8*Math.sqrt(2)) {
                         res.end(JSON.stringify({'msg': 'game_end_calc_score'}));
+                        io.emit('end', {userId: userId});
                         data.complete = true;
                         data.save();
                     }
@@ -101,18 +102,27 @@ router.post('/update', function(req, res, next) {
     });
 });
 
+
 io.on('connection', function(socket) {
-    var sdata = {};
+    socket.on('init', function(data){
+        var sdata = {};
+        roomId = data.roomId;
 
-    // Data.where({ 'roomId': req.body.room_id }).findOne(function (err, room) {
-    //     for (var user in room.users) {
-    //         Data.where({ 'userId': user }).findOne(function (err, data) {
-    //             sdata[user] = data.path;
-    //         });
-    //     }
-    // });
+        Room.where({ 'roomId': roomId }).findOne(function (err, room) {
+            console.log(room.users);
+            var cursor = Data.where({ likes: { $in: room.users } }).find();
 
-    io.emit('update', sdata);
+            // function (err, data) {
+            //     console.log(user, data);
+            //     if (data != null) {
+            //         sdata[user] = data.path;
+            //     }
+            // }
+        });
+
+        console.log(sdata);
+        socket.emit('init', sdata);
+    });
 });
 
 module.exports = router;
