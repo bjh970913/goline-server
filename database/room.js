@@ -1,7 +1,7 @@
 var dbCon = require('./db');
+var mongoose = require('mongoose');
 
 var roomSchema = mongoose.Schema({
-    id: Number,
     users: Array
 });
 
