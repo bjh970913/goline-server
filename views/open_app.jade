@@ -1,59 +1,64 @@
-extends layout
+doctype html
+html
+    head
+        title ::Go-Line::
+        script(type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=4mYGcKU0yZF0lhE1j5Ze")
+        script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js")
+        script(src="https://cdn.socket.io/socket.io-1.4.5.js")
+        link(href='http://fonts.googleapis.com/css?family=Noto+Sans' rel='stylesheet' type='text/css')
+        meta(charset="UTF-8")
 
-head
-    <link href='http://fonts.googleapis.com/css?family=Noto+Sans' rel='stylesheet' type='text/css'>
-    <meta charset="UTF-8">
-    <title>::Go-Line::</title>
+        style.
+            html, body {
+                height: 100%;
+                overflow: hidden;
+            }
+            body{ background-color: #002366; }
+            @import url(http://fonts.googleapis.com/css?family=Noto+Sans);
+            
+            .head{
+                background-color: #002366;
+                color: white;
+                font-family: 'Noto Sans';
+                text-align: center;
+                font-size: 40px;
+                width: 100%;
+                height: 100px;
+                line-height: 90px;
+                margin-top: 0px;
+                margin-bottom: 0px;
+            }
+            #sub{
+                font-size: 20px;
+            }
+            .go{
+                font-size: 100px;
+            }
+            .kind{
+                font-size: 20px;
+                background-color: #002366;
+                color: white;
+                font-family: 'Noto Sans';
+                text-align: center;
+                margin-top: 400px;
+            }
+        script.
+            var hash = location.hash.substr(1);
+            var room_id = hash.substr(hash.indexOf('room_id=')).split('&')[0].split('=')[1];
 
-style.
-    body{ background-color: #002366; }
-    @import url(http://fonts.googleapis.com/css?family=Noto+Sans);
-    
-    .head{
-        background-color: #002366;
-        color: white;
-        font-family: 'Noto Sans';
-        text-align: center;
-        font-size: 40px;
-        width: 100%;
-        height: 100px;
-        line-height: 90px;
-        margin-top: 0px;
-        margin-bottom: 0px;
-    }
-    #sub{
-        font-size: 20px;
-    }
-    .go{
-        font-size: 100px;
-    }
-    .kind{
-        font-size: 20px;
-        background-color: #002366;
-        color: white;
-        font-family: 'Noto Sans';
-        text-align: center;
-        margin-top: 400px;
-
-    }
-script.
-    var hash = location.hash.substr(1);
-    var room_id = hash.substr(hash.indexOf('room_id=')).split('&')[0].split('=')[1];
-
-    function startApp() {
-        document.appframe.location = "goline://join?room_id=" + room_id;
-        // setTimeout("callback()", 1000);
-    }
- 
-    function callback() {
-        //history.back();
-    }
-
-<body onLoad="startApp()">
-    <div class="head">
-        Oh..<br id="sub">
-        You didn't Install<br id="sub">
-        <p class="go">GO-LINE?</p>
-        <a class="kind" href="#">Don't Worry! Click Here and Get GO-LINE!</a>
-    </div>
-</body>
+            function startApp() {
+                document.appframe.location = "goline://join?room_id=" + room_id;
+                // setTimeout("callback()", 1000);
+            }
+         
+            function callback() {
+                //history.back();
+            }
+    body(onLoad="startApp()")
+        .head
+            | Oh..
+            br#sub
+            |         You didn't Install
+            br#sub
+            p.go GO-LINE?
+            a.kind(href='#') Don't Worry! Click Here and Get GO-LINE!
