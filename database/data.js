@@ -15,7 +15,7 @@ var dataSchema = mongoose.Schema({
         type: Boolean,
         'default': false
     },
-    area: {
+    score: {
         type: Number,
         'default': 0
     }

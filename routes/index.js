@@ -50,23 +50,26 @@ router.get('/create', function(req, res, next) {
 /* Join room */
 router.post('/join', function(req, res, next) {
     var body = req.body;
+    var userId = body.user_id
     Room.where({ 'roomId': body.room_id }).findOne(function (err, room) {
         console.log(err, room);
         if (room) {
-            room.users.push(body.user_id);
+            room.users.push(userId);
 
             room.users = room.users.filter(function(elem, pos) {
                 return room.users.indexOf(elem) == pos;
             })
-
             room.save();
 
-            // TODO
-            // find user from data and delete
-
-            var data = new Data({userId: body.user_id});
-            data.save();
-
+            Data.where({'userId': userId}).findOne(function(err, data){
+                if (!err) {
+                    data.path=[];
+                    data.save();
+                } else {
+                    var data = new Data({userId: userId, path:[]});
+                    data.save();
+                }
+            });
             res.end(JSON.stringify({ 'roomId': room.roomId}));
         } else {
             res.end(JSON.stringify({'error': 'not found'}));
@@ -91,10 +94,13 @@ router.post('/update', function(req, res, next) {
         time = (time - room.time)/60000;
         var msg;
 
-        if (time>= 10) {
-            res.end(JSON.stringify({'msg': 'game_end_timeout'}));
-        } else {
-            Data.where({'userId': userId}).findOne(function(err, data){
+        console.log(time);
+
+        Data.where({'userId': userId}).findOne(function(err, data){
+            if (time>= 10) {
+                data.score = 0;
+                data.save();
+            } else {
                 data.path.push(pos);
                 data.save();
 
@@ -116,8 +122,9 @@ router.post('/update', function(req, res, next) {
                     }
                 }
                 res.end(JSON.stringify({'msg': 'game_update_ok'}));
-            });
-        }
+            }
+            res.end(JSON.stringify({'msg': 'game_end_timeout'}));
+        });
     });
 });
 
@@ -145,6 +152,16 @@ io.on('connection', function(socket) {
                 socket.emit('init', sdata);
             });
 
+        });
+    });
+
+    socket.on('end', function(data){
+        console.log(data);
+        var userId = data.userId;
+        var score = data.score;
+        Data.where({'userId': userId}).findOne(function(err, data){
+            data.score = score;
+            data.save();
         });
     });
 });

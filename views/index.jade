@@ -29,6 +29,7 @@ block content
         });
 
         var paths = [];
+        var pathsData = [];
 
         var socket = io.connect('http://goline.heek.kr:8081');
 
@@ -57,12 +58,13 @@ block content
                     strokeColor: color,
                     strokeWeight: 2
                 });
+                pathsData[dd.userId] = [];
                 for (j=0; j<dd.path.length; j++) {
                     var pp = dd.path[j];
                     var pos = new naver.maps.LatLng(pp['latitude'], pp['longitude']);
                     var path = paths[dd.userId].getPath();
                     path.push(pos);
-                    console.log(pp);
+                    pathsData[dd.userId].push(pos);
                 }
                 currents[dd.userId] = new naver.maps.Circle({
                     map: map,
@@ -90,6 +92,7 @@ block content
                     strokeColor: color,
                     strokeWeight: 2
                 });
+                pathsData[userId] = [];
 
                 if (userId == user_id) {
                     start = new naver.maps.Marker({
@@ -109,8 +112,40 @@ block content
 
             var path = paths[userId].getPath();
             path.push(pos);
+            pathsData[userId].push(pos);
 
             currents[userId].setCenter(pos);
+        });
+
+        socket.on('end', function(data){
+            var userId = data.userId;
+            var polyline = paths[userId];
+            var color = polyline.strokeColor;
+            polyline.setMap(null);
+
+            var polygon = new naver.maps.Polygon({
+                map: map,
+                paths: [[]],
+                fillColor: color,
+                fillOpacity: 0.3,
+                strokeColor: color,
+                strokeOpacity: 0.6,
+                strokeWeight: 3,
+                clikable: true
+            });
+
+            var polypath = polygon.getPaths().getAt(0);
+            for (i in pathsData[userId]) {
+                polypath.push(pathsData[userId][i]);
+            }
+
+            paths[userId] = polygon;
+
+            if (userId == user_id) {
+                var score = polygon.getAreaSize();
+                if (!score) score = 0;
+                socket.emit('end', {'score': score, 'userId': user_id});
+            }
         });
 
         socket.emit('init', {roomId: room_id});
