@@ -103,7 +103,7 @@ router.post('/update', function(req, res, next) {
 
                     var dis = Math.sqrt(lng+lat) * 100000;
 
-                    if (dis <= 8*Math.sqrt(2)) {
+                    if (dis <= 16*Math.sqrt(2)) {
                         res.end(JSON.stringify({'msg': 'game_end_calc_score'}));
                         io.emit('end', {userId: userId});
                         data.complete = true;
@@ -123,16 +123,15 @@ io.on('connection', function(socket) {
         roomId = data.roomId;
 
         Room.where({ 'roomId': roomId }).findOne(function (err, room) {
-            var cursor = Data.where('userId').in(room.users).all(function(docs, b) {
-                console.log(docs, b);
+            var cursor = Data.find().where('userId').in(room.users).exec(function(err, docs) {
+                // console.log(docs, b);
+                sdata['paths'] = docs;
+                sdata['bound'] = room.bound;
+                
+                console.log(sdata);
+                socket.emit('init', sdata);
             });
-            // var data = cursor.next();
-            console.log(cursor);
 
-            sdata['bound'] = room.bound;
-            
-            console.log(sdata);
-            socket.emit('init', sdata);
         });
 
     });

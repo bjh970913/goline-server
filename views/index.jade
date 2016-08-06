@@ -44,6 +44,10 @@ block content
                 new naver.maps.LatLng(max_lat, max_lng)
             );
             map.fitBounds(bounds);
+
+            for (i=0; i<data.paths.length; i++) {
+                continue;
+            }
         });
 
         socket.on('update', function(data){
