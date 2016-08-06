@@ -7,6 +7,9 @@ var dataSchema = mongoose.Schema({
         type: String,
         unique: true
     },
+    roomId: {
+        type: String,
+    },
     path: Array,
     complete: {
         type: Boolean,
@@ -15,10 +18,6 @@ var dataSchema = mongoose.Schema({
     area: {
         type: Number,
         'default': 0
-    },
-    time : {
-        type : Date,
-        default: Date.now
     }
 });
 
