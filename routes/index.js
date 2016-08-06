@@ -117,6 +117,11 @@ router.post('/update', function(req, res, next) {
 });
 
 
+router.get('/invite', function(req, res) {
+    res.render('open_app');
+});
+
+
 io.on('connection', function(socket) {
     socket.on('init', function(data){
         var sdata = {};
