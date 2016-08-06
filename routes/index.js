@@ -48,9 +48,9 @@ router.post('/join', function(req, res, next) {
         console.log(err, room);
         if (room) {
             room.users.push(req.body.user_id);
-            res.render('index', { roomId: room.roomId});
+            res.end(JSON.stringify({ roomId: room.roomId}));
         } else {
-            res.end('not found');   
+            res.end(JSON.stringify({'not found'}));
         }
     });
 });
