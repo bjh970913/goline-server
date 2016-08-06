@@ -20,7 +20,7 @@ router.get('/mongoT', function(req, res, next) {
 });
 
 router.get('/play', function(req, res, next) {
-    res.end(JSON.stringify(req));
+    res.render('index', { title: 'Express' });
 });
 
 /* Create room */
