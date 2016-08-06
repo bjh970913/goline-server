@@ -42,6 +42,11 @@ router.post('/join', function(req, res, next) {
         console.log(err, room);
         if (room) {
             room.users.push(req.body.user_id);
+
+            room.users = room.users.filter(function(elem, pos) {
+                return room.users.indexOf(elem) == pos;
+            })
+
             room.save();
 
             var data = new Data({userId: req.body.user_id});
@@ -64,6 +69,8 @@ router.post('/update', function(req, res, next) {
         'longitude': req.body.longitude
     }
 
+    console.log(req.body);
+
     Room.where({ 'roomId': req.body.room_id }).findOne(function (err, room) {
         LatLng = room.bound;
 
@@ -75,6 +82,7 @@ router.post('/update', function(req, res, next) {
             res.end(JSON.stringify({'msg': 'game_end_timeout'}));
         } else {
             Data.where({'userId': userId}).findOne(function(err, data){
+                console.log(data);
                 data.path.push(pos);
                 data.save();
 

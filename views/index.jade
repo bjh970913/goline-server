@@ -55,4 +55,6 @@ block content
             path.push(pos);
         });
 
-        socket.emit('init', {roomId:'S1wiPcQt'});
+        var roomId = document.title;
+
+        socket.emit('init', {roomId: roomId});
