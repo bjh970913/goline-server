@@ -29,6 +29,9 @@ router.post('/create', function(req, res, next) {
     });
     newRoom.save();
 
+    var data = new Data({userId: manager});
+    data.save();
+
     res.render('create', { roomId: newRoom.roomId});
 });
 
