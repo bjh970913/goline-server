@@ -23,15 +23,16 @@ router.get('/play', function(req, res, next) {
 
 /* Create room */
 router.post('/create', function(req, res, next) {
-    var manager = req.body.user_id;
+    var body = req.body;
+    var manager = body.user_id;
 
     var newRoom = new Room({
         users: [ manager ],
         bound: {
-            'latitudeMin': req.body.min_latitude,
-            'latitudeMax': req.body.max_latitude,
-            'longitudeMin': req.body.min_longitude,
-            'longitudeMax': req.body.max_longitude
+            'latitudeMin': body.min_latitude,
+            'latitudeMax': body.max_latitude,
+            'longitudeMin': body.min_longitude,
+            'longitudeMax': body.max_longitude
         }
     });
     newRoom.save();
@@ -48,10 +49,11 @@ router.get('/create', function(req, res, next) {
 
 /* Join room */
 router.post('/join', function(req, res, next) {
-    Room.where({ 'roomId': req.body.room_id }).findOne(function (err, room) {
+    var body = req.body;
+    Room.where({ 'roomId': body.room_id }).findOne(function (err, room) {
         console.log(err, room);
         if (room) {
-            room.users.push(req.body.user_id);
+            room.users.push(body.user_id);
 
             room.users = room.users.filter(function(elem, pos) {
                 return room.users.indexOf(elem) == pos;
@@ -62,7 +64,7 @@ router.post('/join', function(req, res, next) {
             // TODO
             // find user from data and delete
 
-            var data = new Data({userId: req.body.user_id});
+            var data = new Data({userId: body.user_id});
             data.save();
 
             res.end(JSON.stringify({ 'roomId': room.roomId}));
@@ -75,13 +77,14 @@ router.post('/join', function(req, res, next) {
 /* Update user location */
 router.post('/update', function(req, res, next) {
     var LatLng;
-    var userId = req.body.user_id;
+    var body = body;
+    var userId = body.user_id;
     var pos = {
-        'latitude': req.body.latitude,
-        'longitude': req.body.longitude
+        'latitude': body.latitude,
+        'longitude': body.longitude
     }
 
-    Room.where({ 'roomId': req.body.room_id }).findOne(function (err, room) {
+    Room.where({ 'roomId': body.room_id }).findOne(function (err, room) {
         LatLng = room.bound;
 
         var time = new Date();
@@ -95,7 +98,7 @@ router.post('/update', function(req, res, next) {
                 data.path.push(pos);
                 data.save();
 
-                io.sockets.in(req.body.room_id).emit('update', {userId: userId, pos: pos});
+                io.sockets.in(body.room_id).emit('update', {userId: userId, pos: pos});
 
                 if (time > 2) {
                     var startPoint = data.path[0];
@@ -107,7 +110,7 @@ router.post('/update', function(req, res, next) {
 
                     if (dis <= 16*Math.sqrt(2)) {
                         res.end(JSON.stringify({'msg': 'game_end_calc_score'}));
-                        io.sockets.in(req.body.room_id).emit('end', {userId: userId});
+                        io.sockets.in(body.room_id).emit('end', {userId: userId});
                         data.complete = true;
                         data.save();
                     }
@@ -144,9 +147,6 @@ io.on('connection', function(socket) {
 
         });
     });
-    // socket.on('disconnect', function(data){
-    //     socket.leave(key);
-    // });
 });
 
 module.exports = router;
