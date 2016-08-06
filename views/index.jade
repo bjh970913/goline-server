@@ -12,7 +12,11 @@ block content
             height: 100%;
         }
     script.
-        var socket = io.connect('http://goline.heek.kr:8080')
+        var socket = io.connect('http://goline.heek.kr:8081');
+
+        socket.on('update', function(data){
+            console.log(data);
+        });
         //- var position = new naver.maps.LatLng(37.3595704, 127.105399);
 
 

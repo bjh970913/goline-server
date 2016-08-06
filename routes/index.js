@@ -1,6 +1,6 @@
 var express = require('express');
 var util = require("util");
-var io = require('socket.io')();
+var io = require('socket.io')(8081);
 var shortid = require('shortid');
 var router = express.Router();
 var Data = require('../database/data');
@@ -79,6 +79,7 @@ router.post('/update', function(req, res, next) {
                 data.save();
 
                 io.emit('update', {userId: userId, pos: pos});
+                console.log('emit update');
 
                 if (time > 2) {
                     var startPoint = data.path[0];
@@ -103,15 +104,15 @@ router.post('/update', function(req, res, next) {
 io.on('connection', function(socket) {
     var sdata = {};
 
-    Data.where({ 'roomId': req.body.room_id }).findOne(function (err, room) {
-        for (var user in room.users) {
-            Data.where({ 'userId': user }).findOne(function (err, data) {
-                sdata[user] = data.path;
-            });
-        }
-    });
+    // Data.where({ 'roomId': req.body.room_id }).findOne(function (err, room) {
+    //     for (var user in room.users) {
+    //         Data.where({ 'userId': user }).findOne(function (err, data) {
+    //             sdata[user] = data.path;
+    //         });
+    //     }
+    // });
 
-    socket.emit('update', sdata);
+    io.emit('update', sdata);
 });
 
 module.exports = router;
