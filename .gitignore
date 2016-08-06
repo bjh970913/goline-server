@@ -29,3 +29,5 @@ node_modules
 # Debug log from npm
 npm-debug.log
 sftp-config.json
+goline-server.sublime-project
+goline-server.sublime-workspace
