@@ -49,7 +49,7 @@ router.get('/create', function(req, res, next) {
 router.post('/join', function(req, res, next) {
     Room.where({ 'roomId': req.body.room_id }).findOne(function (err, room) {
         if(err) {
-            res.send('not found');
+            res.end('not found');
         }
         if(room) {
             room.users.push(user_id);
