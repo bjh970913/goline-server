@@ -12,12 +12,16 @@ block content
             height: 100%;
         }
     script.
+        var hash = location.hash.substr(1);
+        var user_id = hash.substr(hash.indexOf('user_id=')).split('&')[0].split('=')[1];
+        var room_id = hash.substr(hash.indexOf('room_id=')).split('&')[0].split('=')[1];
+
         var position = new naver.maps.LatLng(37.3595704, 127.105399);
 
 
         var map = new naver.maps.Map('map', {
             center: position,
-            zoom: 20
+            zoom: 12
         });
 
         var paths = [];
@@ -55,6 +59,4 @@ block content
             path.push(pos);
         });
 
-        var roomId = document.title;
-
-        socket.emit('init', {roomId: roomId});
+        socket.emit('init', {roomId: room_id});
