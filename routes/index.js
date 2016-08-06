@@ -47,6 +47,7 @@ router.post('/join', function(req, res, next) {
             var data = new Data({userId: req.body.user_id});
             data.save();
 
+            io.emit('join', {userId: req.body.user_id});
             res.end(JSON.stringify({ 'roomId': room.roomId}));
         } else {
             res.end(JSON.stringify({'error': 'not found'}));
@@ -77,6 +78,8 @@ router.post('/update', function(req, res, next) {
                 data.path.push(pos);
                 data.save();
 
+                io.emit('update', {userId: userId, pos: pos});
+
                 if (time > 2) {
                     var startPoint = data.path[0];
 
@@ -87,13 +90,14 @@ router.post('/update', function(req, res, next) {
 
                     if (dis <= 8*Math.sqrt(2)) {
                         res.end(JSON.stringify({'msg': 'game_end_calc_score'}));
+                        data.complete = true;
+                        data.save();
                     }
                 }
                 res.end(JSON.stringify({'msg': 'game_update_ok'}));
             });
         }
     });
-
 });
 
 io.on('connection', function(socket) {
