@@ -16,6 +16,8 @@ block content
         var user_id = hash.substr(hash.indexOf('user_id=')).split('&')[0].split('=')[1];
         var room_id = hash.substr(hash.indexOf('room_id=')).split('&')[0].split('=')[1];
 
+        var colors = [];
+
         var position = new naver.maps.LatLng(37.5078074, 127.0451858);
 
         var map = new naver.maps.Map('map', {
