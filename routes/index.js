@@ -19,7 +19,7 @@ router.get('/mongoT', function(req, res, next) {
 
 /* POST home page. */
 router.get('/create', function(req, res, next) {
-    res.end(JSON.stringify(req));
+    res.render('create', { title: 'Express' });
 });
 
 router.get('/join', function(req, res, next) {
