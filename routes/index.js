@@ -81,6 +81,7 @@ router.post('/update', function(req, res, next) {
         }
 
         Data.where({ 'userId': userId }).findOne(function (err, data) {
+            console.log(userId);
             data.path.push(pos);
             data.save();
         });
