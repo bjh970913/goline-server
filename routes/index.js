@@ -57,11 +57,12 @@ router.post('/join', function(req, res, next) {
 
 /* Update user location */
 router.post('/update', function(req, res, next) {
+    // console.log(req.body);
     var bound;
     var userId = req.body.user_id;
     var pos = {
-        'latitude': lat,
-        'longitude': lng
+        'latitude': req.body.latitude,
+        'longitude': req.body.longitude
     }
 
     Data.where({ 'roomId': req.body.room_id }).findOne(function (err, room) {
