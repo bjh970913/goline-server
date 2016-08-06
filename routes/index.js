@@ -35,8 +35,6 @@ router.post('/create', function(req, res, next) {
             'longitudeMax': req.body.max_longitude
         }
     });
-    
-    // res.send('<html><head><title>'+room.roomId+'</title></head></html>');
     res.render('create', { roomId: room.roomId});
 });
 
