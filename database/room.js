@@ -9,7 +9,7 @@ var roomSchema = mongoose.Schema({
         'default': shortid.generate
     },
     users: Array,
-    bound: Mixed
+    bound: {}
 });
 
 var Room = mongoose.model('Room', roomSchema);
