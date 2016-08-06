@@ -113,6 +113,9 @@ function update_polygon(user_id, points) {
 
 }
 var socket = io('http://goline.heek.kr');
+
+socket.emit('start', {'room_id': room_id, 'user_id': user_id});
+
 socket.on('update', function(data) {
 	for (user_id in data) {
 		Array.prototype.push.apply(lines[user_id], data[uesr_id]);
