@@ -12,6 +12,11 @@
 
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 <script>
+
+var hash = location.hash.substr(1);
+var user_id = hash.substr(hash.indexOf('user_id=')).split('&')[0].split('=')[1];
+var room_id = hash.substr(hash.indexOf('room_id=')).split('&')[0].split('=')[1];
+
 var position = new naver.maps.LatLng(37.3595704, 127.105399);
 // (불필요) 기존의 선들을 보관하기 위한 변수
 var lines = {};
