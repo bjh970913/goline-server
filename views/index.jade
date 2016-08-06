@@ -31,6 +31,18 @@ block content
 
         socket.on('init', function(data){
             console.log(data);
+
+            // THIS_IS_EXAMPLE_LOCATION
+            // TODO: apply data
+            var min_lat = 37.2380651;
+            var min_lng = 131.8562652;
+            var max_lat = 37.2444436;
+            var max_lng = 131.8786475;
+            var bounds = new naver.maps.LatLngBounds(
+                new naver.maps.LatLng(min_lat, min_lng),
+                new naver.maps.LatLng(max_lat, max_lng)
+            );
+            map.fitBounds(bounds);
         });
 
         socket.on('update', function(data){
