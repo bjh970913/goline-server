@@ -4,15 +4,20 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    <title>ȥ���ı�����</title>
-    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=TxhuEBw_D6QNb4wuyGIR	"></script>
+    <title>È¥µ·ÆÄ±«¸Á°¢</title>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=ZOlpHCCyGnMnV9cIBlrH"></script>
 </head>
 <body>
 <div id="map" style="width:100%;height:950px;"></div>
 
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 <script>
 
 var position = new naver.maps.LatLng(37.3595704, 127.105399);
+
+// (불필요) 기존의 선들을 보관하기 위한 변수
+var lines = {};
+var polygons = {};
 
 
 var map = new naver.maps.Map('map', {
@@ -21,7 +26,6 @@ var map = new naver.maps.Map('map', {
 });
 
 var a = new Array();
-
 
 a[0] = new naver.maps.Polygon({
     map: map,
@@ -81,6 +85,71 @@ naver.maps.Event.addListener(map, 'click', function(e) {
 
 
     }
+});
+
+
+/* *
+ * update_line(user_id, points)
+ *
+ * params:
+ *   user_id : 유저의 고유ID
+ *   points : 새로 추가된 점들의 리스트
+ * 
+ * example:
+ *   user_id = "A93R3R9RWQ"
+ *   points = [
+ *       {'latitude': 37.1234, 'longitude': 128.1234},
+ *       {'latitude': 37.1232, 'longitude': 128.1236}
+ *   ]
+ * */
+function update_line(user_id, points) {
+	// TOOD: Update map overlays
+}
+
+
+/* *
+ * update_polygon(user_id, points)
+ *
+ * params:
+ *   user_id : 유저의 고유ID
+ *   points : Polygon을 구성하는 모든 점들의 List
+ * 
+ * example:
+ *   user_id = "A93R3R9RWQ"
+ *   points = [
+ *       {'latitude': 37.1234, 'longitude': 128.1234},
+ *       {'latitude': 37.1232, 'longitude': 128.1236},
+ *       {'latitude': 37.1231, 'longitude': 128.1266},
+ *       {'latitude': 37.1239, 'longitude': 128.1226},
+ *       {'latitude': 37.1237, 'longitude': 128.1226}
+ *   ]
+ * */
+function update_polygon(user_id, points) {
+	// TOOD: Update map overlays
+}
+
+
+var socket = io('http://goline.heek.kr');
+
+socket.on('update', function(data) {
+	for (user_id in data) {
+		Array.prototype.push.apply(lines[user_id], data[uesr_id]);
+		update_line(user_id, data[user_id]);
+	}
+});
+
+socket.on('update_polygon', function(data) {
+	for (user_id in data) {
+		lines[user_id].push(data[uesr_id]);
+		update_polygon(user_id, data[user_id]);
+	}
+});
+
+socket.on('game_over', function(data) {
+	for (i in data) {
+		// data[i]
+		// TODO: Android에 게임오버 알림 (+게임오버화면)
+	}
 });
 
 </script>
