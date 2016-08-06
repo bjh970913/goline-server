@@ -5,9 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;">
 <title></title>
 <script>
+    var hash = location.hash.substr(1);
+    var room_id = hash.substr(hash.indexOf('room_id=')).split('&')[0].split('=')[1];
 
     function startApp() {
-        document.appframe.location = "goline://join?room_id=000";
+        document.appframe.location = "goline://join?room_id=" + room_id;
         // setTimeout("callback()", 1000);
     }
  
