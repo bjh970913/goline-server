@@ -59,10 +59,12 @@ router.post('/join', function(req, res, next) {
 
             room.save();
 
+            // TODO
+            // find user from data and delete
+
             var data = new Data({userId: req.body.user_id});
             data.save();
 
-            io.emit('join', {userId: req.body.user_id});
             res.end(JSON.stringify({ 'roomId': room.roomId}));
         } else {
             res.end(JSON.stringify({'error': 'not found'}));
@@ -93,7 +95,7 @@ router.post('/update', function(req, res, next) {
                 data.path.push(pos);
                 data.save();
 
-                io.emit('update', {userId: userId, pos: pos});
+                io.sockets.in(req.body.room_id).emit('update', {userId: userId, pos: pos});
 
                 if (time > 2) {
                     var startPoint = data.path[0];
@@ -105,7 +107,7 @@ router.post('/update', function(req, res, next) {
 
                     if (dis <= 16*Math.sqrt(2)) {
                         res.end(JSON.stringify({'msg': 'game_end_calc_score'}));
-                        io.emit('end', {userId: userId});
+                        io.sockets.in(req.body.room_id).emit('end', {userId: userId});
                         data.complete = true;
                         data.save();
                     }
@@ -118,9 +120,12 @@ router.post('/update', function(req, res, next) {
 
 
 io.on('connection', function(socket) {
+    socket.emit('connected');
     socket.on('init', function(data){
         var sdata = {};
         roomId = data.roomId;
+        socket.join(roomId);
+        socket.ID = roomId;
 
         Room.where({ 'roomId': roomId }).findOne(function (err, room) {
             var cursor = Data.find().where('userId').in(room.users).exec(function(err, docs) {
@@ -133,8 +138,10 @@ io.on('connection', function(socket) {
             });
 
         });
-
     });
+    // socket.on('disconnect', function(data){
+    //     socket.leave(key);
+    // });
 });
 
 module.exports = router;
