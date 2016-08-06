@@ -123,8 +123,11 @@ io.on('connection', function(socket) {
         roomId = data.roomId;
 
         Room.where({ 'roomId': roomId }).findOne(function (err, room) {
-            console.log(room.users);
-            var cursor = Data.where({ likes: { $in: room.users } }).find();
+            var cursor = Data.where('userId').in(room.users).all(function(docs, b) {
+                console.log(docs, b);
+            });
+            // var data = cursor.next();
+            console.log(cursor);
 
             // function (err, data) {
             //     console.log(user, data);
