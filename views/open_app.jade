@@ -47,7 +47,7 @@ html
             var room_id = hash.substr(hash.indexOf('room_id=')).split('&')[0].split('=')[1];
 
             function startApp() {
-                document.appframe.location = "goline://join?room_id=" + room_id;
+                window.location = "goline://join?room_id=" + room_id;
                 // setTimeout("callback()", 1000);
             }
          
