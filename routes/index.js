@@ -18,6 +18,20 @@ router.get('/mongoT', function(req, res, next) {
 });
 
 /* POST home page. */
+router.get('/create', function(req, res, next) {
+    res.end(JSON.stringify(req));
+});
+
+router.get('/join', function(req, res, next) {
+    res.end(JSON.stringify(req));
+});
+
+router.get('/play', function(req, res, next) {
+    res.end(JSON.stringify(req));
+});
+
+
+/* POST home page. */
 router.post('/create', function(req, res, next) {
     res.end(JSON.stringify(req));
 });
