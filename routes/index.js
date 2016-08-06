@@ -1,5 +1,7 @@
 var express = require('express');
 var util = require("util");
+var io = require('socket.io')(80);
+var shortid = require('shortid');
 var router = express.Router();
 var Data = require('../database/data');
 var Room = require('../database/room');
@@ -17,31 +19,43 @@ router.get('/mongoT', function(req, res, next) {
     res.end(JSON.stringify(silence));
 });
 
-/* POST home page. */
-router.get('/create', function(req, res, next) {
-    res.render('create', { title: 'Express' });
-});
-
-router.get('/join', function(req, res, next) {
-    res.end(JSON.stringify(req));
-});
-
 router.get('/play', function(req, res, next) {
     res.end(JSON.stringify(req));
 });
 
-
-/* POST home page. */
+/* Create room */
 router.post('/create', function(req, res, next) {
-    res.end(JSON.stringify(req));
+    var manager = req.body.user_id;
+    var room = new Room({
+        users: [ manager ]
+    });
+    
+    res.send(room.roomId);
 });
 
+/* Join room */
 router.post('/join', function(req, res, next) {
-    res.end(JSON.stringify(req));
+    Room.where({ 'roomId': req.body.room_id }).findOne(function (err, room) {
+        if(err) {
+            res.send('not found');
+        }
+        if(room) {
+            room.users.push(user_id);
+            res.send(room.users);
+        }
+    });
 });
 
+/* Update user location */
 router.post('/update', function(req, res, next) {
-    res.end(JSON.stringify(req));
+    Data.where({ 'userId': req.body.user_id }).findOne(function (err, data) {
+        data.path.push({
+            'latitude': req.body.latitude,
+            'longitude': req.body.longitude
+        });
+    });
+
+    io.sockets.emit(req);
 });
 
 module.exports = router;
