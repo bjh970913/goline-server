@@ -48,6 +48,29 @@ block content
             map.fitBounds(bounds);
 
             for (i=0; i<data.paths.length; i++) {
+                var dd = data.paths[i];
+                var color = colors.pop();
+
+                paths[dd.userId] = new naver.maps.Polyline({
+                    map: map,
+                    path: [],
+                    strokeColor: color,
+                    strokeWeight: 2
+                });
+                for (j=0; j<dd.path.length; j++) {
+                    var pp = dd.path[j];
+                    var pos = new naver.maps.LatLng(pp['latitude'], pp['longitude']);
+                    var path = paths[dd.userId].getPath();
+                    path.push(pos);
+                    console.log(pp);
+                }
+                currents[dd.userId] = new naver.maps.Circle({
+                    map: map,
+                    center: pos,
+                    radius: 5,
+                    fillColor: color,
+                    fillOpacity: 0.8
+                });
                 continue;
             }
         });
