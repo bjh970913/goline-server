@@ -57,14 +57,45 @@ router.post('/join', function(req, res, next) {
 
 /* Update user location */
 router.post('/update', function(req, res, next) {
-    Data.where({ 'userId': req.body.user_id }).findOne(function (err, data) {
-        data.path.push({
-            'latitude': req.body.latitude,
-            'longitude': req.body.longitude
-        });
+    var bound;
+    var userId = req.body.user_id;
+    var pos = {
+        'latitude': lat,
+        'longitude': lng
+    }
+
+    Data.where({ 'roomId': req.body.room_id }).findOne(function (err, room) {
+        bound = room.bound;
     });
 
-    io.sockets.emit(req);
+    if (pos.latitude > bound.latitudeMax
+     || pos.latitude < bound.latitudeMin
+     || pos.longitude > bound.longitudeMax
+     || pos.longitude < bound.longitudeMin) {
+        return;
+    }
+
+    Data.where({ 'userId': userId }).findOne(function (err, data) {
+        data.path.push(pos);
+    });
+
+    io.sockets.emit({
+        userId: [pos]
+    });
+});
+
+io.on('connection', function(socket) {
+    var sdata = {};
+
+    Data.where({ 'roomId': req.body.room_id }).findOne(function (err, room) {
+        for (var user in room.users) {
+            Data.where({ 'userId': user }).findOne(function (err, data) {
+                sdata[user] = data.path;
+            });
+        }
+    });
+
+    socket.emit('update', sdata);
 });
 
 module.exports = router;
