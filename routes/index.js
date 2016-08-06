@@ -23,7 +23,6 @@ router.get('/play', function(req, res, next) {
 
 /* Create room */
 router.post('/create', function(req, res, next) {
-    console.log(req.body);
     var manager = req.body.user_id;
     var newRoom = new Room({
         users: [ manager ],
@@ -45,11 +44,10 @@ router.get('/create', function(req, res, next) {
 
 /* Join room */
 router.post('/join', function(req, res, next) {
-    console.log(req.body);
     Room.where({ 'roomId': req.body.room_id }).findOne(function (err, room) {
         console.log(err, room);
         if (room) {
-            room.users.push(user_id);
+            room.users.push(req.body.user_id);
             res.render('index', { roomId: room.roomId});
         } else {
             res.end('not found');   
