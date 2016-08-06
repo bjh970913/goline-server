@@ -36,7 +36,7 @@ router.post('/create', function(req, res, next) {
         }
     });
     room.save();
-    console.log(room, room.roomId);
+    // console.log(room, room.roomId);
 
     res.render('create', { roomId: room.roomId});
 });
