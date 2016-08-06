@@ -77,7 +77,7 @@ router.post('/join', function(req, res, next) {
 /* Update user location */
 router.post('/update', function(req, res, next) {
     var LatLng;
-    var body = body;
+    var body = req.body;
     var userId = body.user_id;
     var pos = {
         'latitude': body.latitude,
