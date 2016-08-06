@@ -15,6 +15,10 @@ var dataSchema = mongoose.Schema({
     area: {
         type: Number,
         'default': 0
+    },
+    time : {
+        type : Date,
+        default: Date.now
     }
 });
 

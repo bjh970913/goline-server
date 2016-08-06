@@ -9,7 +9,11 @@ var roomSchema = mongoose.Schema({
         'default': shortid.generate
     },
     users: Array,
-    bound: {}
+    bound: {},
+    time : {
+        type : Date,
+        default: Date.now
+    }
 });
 
 var Room = mongoose.model('Room', roomSchema);

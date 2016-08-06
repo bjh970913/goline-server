@@ -73,15 +73,16 @@ router.post('/update', function(req, res, next) {
         LatLng = room.bound;
 
 
-        if (pos.latitude > LatLng.latitudeMax
-         || pos.latitude < LatLng.latitudeMin
-         || pos.longitude > LatLng.longitudeMax
-         || pos.longitude < LatLng.longitudeMin) {
-            res.end(JSON.stringify({'error': 'out of bound'}));
-        }
+        // if (pos.latitude > LatLng.latitudeMax
+        //  || pos.latitude < LatLng.latitudeMin
+        //  || pos.longitude > LatLng.longitudeMax
+        //  || pos.longitude < LatLng.longitudeMin) {
+        //     res.end(JSON.stringify({'error': 'out of bound'}));
+        // }
 
         Data.where({ 'userId': userId }).findOne(function (err, data) {
-            console.log(userId);
+            console.log(data);
+            // console.log(userId);
             data.path.push(pos);
             data.save();
         });
