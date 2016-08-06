@@ -5,7 +5,8 @@ var shortid = require('shortid');
 var roomSchema = mongoose.Schema({
     roomId: {
         type: String,
-        unique: true
+        unique: true,
+        'default': shortid.generate
     },
     users: Array,
     bound: {},
