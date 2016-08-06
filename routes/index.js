@@ -1,6 +1,6 @@
 var express = require('express');
 var util = require("util");
-var io = require('socket.io')(80);
+var io = require('socket.io')(8081);
 var shortid = require('shortid');
 var router = express.Router();
 var Data = require('../database/data');
