@@ -48,7 +48,12 @@ router.post('/join', function(req, res, next) {
         console.log(err, room);
         if (room) {
             room.users.push(req.body.user_id);
-            res.end(JSON.stringify({ roomId: room.roomId}));
+            room.save();
+
+            var data = new Data({userId: req.body.user_id});
+            data.save();
+
+            res.end(JSON.stringify({ 'roomId': room.roomId}));
         } else {
             res.end(JSON.stringify({'error': 'not found'}));
         }
@@ -57,32 +62,36 @@ router.post('/join', function(req, res, next) {
 
 /* Update user location */
 router.post('/update', function(req, res, next) {
-    // console.log(req.body);
-    var bound;
+    var LatLng;
     var userId = req.body.user_id;
     var pos = {
         'latitude': req.body.latitude,
         'longitude': req.body.longitude
     }
 
-    Data.where({ 'roomId': req.body.room_id }).findOne(function (err, room) {
-        bound = room.bound;
+    Room.where({ 'roomId': req.body.room_id }).findOne(function (err, room) {
+        LatLng = room.bound;
+
+
+        if (pos.latitude > LatLng.latitudeMax
+         || pos.latitude < LatLng.latitudeMin
+         || pos.longitude > LatLng.longitudeMax
+         || pos.longitude < LatLng.longitudeMin) {
+            res.end(JSON.stringify({'error': 'out of bound'}));
+        }
+
+        Data.where({ 'userId': userId }).findOne(function (err, data) {
+            data.path.push(pos);
+            data.save();
+        });
+
+        io.sockets.emit({
+            userId: [pos]
+        });
+
+        res.end();
     });
 
-    if (pos.latitude > bound.latitudeMax
-     || pos.latitude < bound.latitudeMin
-     || pos.longitude > bound.longitudeMax
-     || pos.longitude < bound.longitudeMin) {
-        return;
-    }
-
-    Data.where({ 'userId': userId }).findOne(function (err, data) {
-        data.path.push(pos);
-    });
-
-    io.sockets.emit({
-        userId: [pos]
-    });
 });
 
 io.on('connection', function(socket) {

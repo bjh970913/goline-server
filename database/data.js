@@ -5,12 +5,17 @@ var shortid = require('shortid');
 var dataSchema = mongoose.Schema({
     userId: {
         type: String,
-        unique: true,
-        'default': shortid.generate
+        unique: true
     },
     path: Array,
-    complete: Boolean,
-    area: Number
+    complete: {
+        type: Boolean,
+        'default': false
+    },
+    area: {
+        type: Number,
+        'default': 0
+    }
 });
 
 var Data = mongoose.model('Data', dataSchema);
