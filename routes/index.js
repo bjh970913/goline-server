@@ -38,6 +38,10 @@ router.post('/create', function(req, res, next) {
     res.render('create', { roomId: room.roomId});
 });
 
+router.get('/create', function(req, res, next) {
+    res.render('create', { roomId: -1});
+});
+
 /* Join room */
 router.post('/join', function(req, res, next) {
     Room.where({ 'roomId': req.body.room_id }).findOne(function (err, room) {
