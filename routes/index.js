@@ -12,10 +12,8 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/mongoT', function(req, res, next) {
-    console.log(Data);
     var silence = new Data({ area: 12 });
     silence.save();
-    console.log(req);
     res.end(JSON.stringify(silence));
 });
 
@@ -26,7 +24,7 @@ router.get('/play', function(req, res, next) {
 /* Create room */
 router.post('/create', function(req, res, next) {
     var manager = req.body.user_id;
-    var room = new Room({
+    var newRoom = new Room({
         users: [ manager ],
         bound: {
             'latitudeMin': req.body.min_latitude,
@@ -35,10 +33,9 @@ router.post('/create', function(req, res, next) {
             'longitudeMax': req.body.max_longitude
         }
     });
-    room.save();
-    // console.log(room, room.roomId);
+    newRoom.save();
 
-    res.render('create', { roomId: room.roomId});
+    res.render('create', { roomId: newRoom.roomId});
 });
 
 router.get('/create', function(req, res, next) {
@@ -47,13 +44,13 @@ router.get('/create', function(req, res, next) {
 
 /* Join room */
 router.post('/join', function(req, res, next) {
+    console.log(req.body.room_id);
     Room.where({ 'roomId': req.body.room_id }).findOne(function (err, room) {
-        if(err) {
-            res.end('not found');
-        }
-        if(room) {
+        if (room) {
             room.users.push(user_id);
             res.render('index', { roomId: room.roomId});
+        } else {
+            res.end('not found');   
         }
     });
 });
