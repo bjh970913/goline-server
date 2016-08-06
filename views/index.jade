@@ -1,10 +1,11 @@
 extends layout
 
 block content
-    script (type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=TxhuEBw_D6QNb4wuyGIR")
+    script(type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=TxhuEBw_D6QNb4wuyGIR")
     #map
-    script
+    script.
         var position = new naver.maps.LatLng(37.3595704, 127.105399);
+
 
         var map = new naver.maps.Map('map', {
             center: position,
@@ -12,6 +13,7 @@ block content
         });
 
         var a = new Array();
+
 
         a[0] = new naver.maps.Polygon({
             map: map,
@@ -39,18 +41,18 @@ block content
         naver.maps.Event.addListener(map, 'click', function(e) {
             count++;
             if(count<=5){
-            var point = e.coord;
+                var point = e.coord;
 
-            var path = a[0].getPaths().getAt(0);
-            path.push(point);
+                var path = a[0].getPaths().getAt(0);
+                path.push(point);
 
-            var circle = new naver.maps.Circle({
-            map: map,
-            center: point,
-            radius: 1,
-            fillColor: 'crimson',
-            fillOpacity: 0.8
-            });
+                var circle = new naver.maps.Circle({
+                    map: map,
+                    center: point,
+                    radius: 1,
+                    fillColor: 'crimson',
+                    fillOpacity: 0.8
+                });
             }
             else{
                 var point = e.coord;
