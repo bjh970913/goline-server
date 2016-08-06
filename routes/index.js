@@ -72,8 +72,6 @@ router.post('/update', function(req, res, next) {
         'longitude': req.body.longitude
     }
 
-    console.log(req.body);
-
     Room.where({ 'roomId': req.body.room_id }).findOne(function (err, room) {
         LatLng = room.bound;
 
@@ -85,12 +83,10 @@ router.post('/update', function(req, res, next) {
             res.end(JSON.stringify({'msg': 'game_end_timeout'}));
         } else {
             Data.where({'userId': userId}).findOne(function(err, data){
-                console.log(data);
                 data.path.push(pos);
                 data.save();
 
                 io.emit('update', {userId: userId, pos: pos});
-                console.log('emit update');
 
                 if (time > 2) {
                     var startPoint = data.path[0];
