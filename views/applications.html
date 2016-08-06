@@ -131,8 +131,9 @@ socket.on('update_polygon', function(data) {
 socket.on('game_over', function(data) {
 	for (i in data) {
 		// data[i]
-		// TODO: Android에 게임오버 알림 (+게임오버화면)
+		// TODO: Show score view
 	}
+    window.Android.gameOver();
 });
 </script>
 </body>
