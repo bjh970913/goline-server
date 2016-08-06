@@ -129,16 +129,12 @@ io.on('connection', function(socket) {
             // var data = cursor.next();
             console.log(cursor);
 
-            // function (err, data) {
-            //     console.log(user, data);
-            //     if (data != null) {
-            //         sdata[user] = data.path;
-            //     }
-            // }
+            sdata['bound'] = room.bound;
+            
+            console.log(sdata);
+            socket.emit('init', sdata);
         });
 
-        console.log(sdata);
-        socket.emit('init', sdata);
     });
 });
 
