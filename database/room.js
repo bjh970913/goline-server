@@ -1,8 +1,15 @@
 var dbCon = require('./db');
 var mongoose = require('mongoose');
+var shortid = require('shortid');
 
 var roomSchema = mongoose.Schema({
-    users: Array
+    roomId: {
+        type: String,
+        unique: true,
+        'default': shortid.generate
+    },
+    users: Array,
+    bound: Mixed
 });
 
 var Room = mongoose.model('Room', roomSchema);

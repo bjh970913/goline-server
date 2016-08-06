@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <!--<title>간단한 지도 표시하기</title>-->
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=ZOlpHCCyGnMnV9cIBlrH"></script>
+</head>
+<body>
+    <div id="map" style="width:100%;height:400px;"></div>
+    <button id="create">방 만들기</button>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script>
+        var hash = location.hash.substr(1);
+        var latitude = hash.substr(hash.indexOf('latitude=')).split('&')[0].split('=')[1];
+        var longitude = hash.substr(hash.indexOf('longitude=')).split('&')[0].split('=')[1];
+        var user_id = hash.substr(hash.indexOf('user_id=')).split('&')[0].split('=')[1];
+
+        if (!latitude) latitude = 37.5666805;
+        if (!longitude) longitude = 126.9784147;
+
+        var map = new naver.maps.Map('map', {
+            center: new naver.maps.LatLng(latitude, longitude),
+            zoom: 12,
+            mapTypeId: naver.maps.MapTypeId.NORMAL
+        });
+
+
+        function post(path, params, method) {
+            method = method || "post"; // Set method to post by default if not specified.
+
+            // The rest of this code assumes you are not using a library.
+            // It can be made less wordy if you use one.
+            var form = document.createElement("form");
+            form.setAttribute("method", method);
+            form.setAttribute("action", path);
+
+            for(var key in params) {
+                if(params.hasOwnProperty(key)) {
+                    var hiddenField = document.createElement("input");
+                    hiddenField.setAttribute("type", "hidden");
+                    hiddenField.setAttribute("name", key);
+                    hiddenField.setAttribute("value", params[key]);
+
+                    form.appendChild(hiddenField);
+                 }
+            }
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        $(document).ready(function() {
+            $('#create').click(function() {
+                var params = {};
+                params['user_id'] = user_id;
+                params['min_latitude'] = map.getBounds().getMin().lat();
+                params['min_longitude'] = map.getBounds().getMin().lng();
+                params['max_latitude'] = map.getBounds().getMax().lat();
+                params['max_longitude'] = map.getBounds().getMax().lng();
+                post("/create", params);
+            });
+        });
+    </script>
+</body>
+</html>
