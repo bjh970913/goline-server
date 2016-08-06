@@ -24,8 +24,15 @@ router.get('/play', function(req, res, next) {
 /* Create room */
 router.post('/create', function(req, res, next) {
     var manager = req.body.user_id;
+
     var newRoom = new Room({
-        users: [ manager ]
+        users: [ manager ],
+        bound: {
+            'latitudeMin': req.body.min_latitude,
+            'latitudeMax': req.body.max_latitude,
+            'longitudeMin': req.body.min_longitude,
+            'longitudeMax': req.body.max_longitude
+        }
     });
     newRoom.save();
 
