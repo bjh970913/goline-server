@@ -36,7 +36,8 @@ router.post('/create', function(req, res, next) {
         }
     });
     
-    res.send('<html><head><title>'+room.roomId+'</title></head></html>');
+    // res.send('<html><head><title>'+room.roomId+'</title></head></html>');
+    res.render('create', { roomId: room.roomId});
 });
 
 /* Join room */
