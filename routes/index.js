@@ -8,7 +8,7 @@ var Room = require('../database/room');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    res.render('index', { title: 'Express' });
+    res.render('index', { title: -1 });
 });
 
 router.get('/mongoT', function(req, res, next) {
@@ -53,8 +53,7 @@ router.post('/join', function(req, res, next) {
         }
         if(room) {
             room.users.push(user_id);
-            // res.render('index', { title: room.});
-            res.end();
+            res.render('index', { title: room.roomId});
         }
     });
 });
