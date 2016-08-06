@@ -20,7 +20,7 @@ router.get('/mongoT', function(req, res, next) {
 });
 
 router.get('/play', function(req, res, next) {
-    res.render('index', { title: 'Express' });
+    res.render('index', { title: -1 });
 });
 
 /* Create room */
@@ -53,7 +53,8 @@ router.post('/join', function(req, res, next) {
         }
         if(room) {
             room.users.push(user_id);
-            res.send(room.users);
+            // res.render('index', { title: room.});
+            res.end();
         }
     });
 });
