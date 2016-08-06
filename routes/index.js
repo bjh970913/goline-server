@@ -50,7 +50,7 @@ router.post('/join', function(req, res, next) {
             room.users.push(req.body.user_id);
             res.end(JSON.stringify({ roomId: room.roomId}));
         } else {
-            res.end(JSON.stringify({'not found'}));
+            res.end(JSON.stringify({'error': 'not found'}));
         }
     });
 });
