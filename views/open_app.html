@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;">
+<title></title>
+<script>
+
+    function startApp() {
+        document.appframe.location = "goline://join?room_id=000";
+        // setTimeout("callback()", 1000);
+    }
+ 
+    function callback() {
+        try {
+             var s = document.appframe.document.body;
+             var resultDiv = document.getElementById("result")
+             resultDiv.innerHTML="<a href=\"./install_app.html\" style='color: blue'>앱이 실행되지 않았으면 여기를 클릭하세요.</a>";
+        } catch (e) {
+            var resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = "App Uninstalled";
+			location.href="./install_app.html";
+        }
+		//history.back();
+    }
+</script>
+
+
+
+</head>
+
+<body onLoad="startApp()">
+
+<div style='visibility: hidden; display: none'>
+<p>GoLine 고오오오오오라아아아아아이이이이이이이인!</p>
+</div>
+
+<iframe id="app" name="appframe" width="0" height="0" border="0" style='visibility: hidden; display: none'>이 웹 브라우저는 iframe을 지원하지 않습니다.</iframe>
+
+<div id="result">
+Opening GoLine...<br />
+/*<a href="./install_app.html" style='color: blue'>앱이 실행되지 않는다면 여기를 클릭하세요.</a>*/
+</div>
+
+</body>
+</html>
