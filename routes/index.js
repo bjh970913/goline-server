@@ -25,13 +25,7 @@ router.get('/play', function(req, res, next) {
 router.post('/create', function(req, res, next) {
     var manager = req.body.user_id;
     var newRoom = new Room({
-        users: [ manager ],
-        bound: {
-            'latitudeMin': req.body.min_latitude,
-            'latitudeMax': req.body.max_latitude,
-            'longitudeMin': req.body.min_longitude,
-            'longitudeMax': req.body.max_longitude
-        }
+        users: [ manager ]
     });
     newRoom.save();
 
@@ -72,25 +66,32 @@ router.post('/update', function(req, res, next) {
     Room.where({ 'roomId': req.body.room_id }).findOne(function (err, room) {
         LatLng = room.bound;
 
+        var time = new Date();
+        time = (time - room.time)/60000;
+        var msg;
 
-        if (pos.latitude > LatLng.latitudeMax
-         || pos.latitude < LatLng.latitudeMin
-         || pos.longitude > LatLng.longitudeMax
-         || pos.longitude < LatLng.longitudeMin) {
-            res.end(JSON.stringify({'error': 'out of bound'}));
+        if (time>= 10) {
+            res.end(JSON.stringify({'msg': 'game_end_timeout'}));
+        } else {
+            Data.where({'userId': userId}).findOne(function(err, data){
+                data.path.push(pos);
+                data.save();
+
+                if (time > 2) {
+                    var startPoint = data.path[0];
+
+                    var lng = Math.pow(startPoint.longitude - pos.longitude, 2);
+                    var lat = Math.pow(startPoint.latitude - pos.latitude, 2);
+
+                    var dis = Math.sqrt(lng+lat) * 100000;
+
+                    if (dis <= 8*Math.sqrt(2)) {
+                        res.end(JSON.stringify({'msg': 'game_end_calc_score'}));
+                    }
+                }
+                res.end(JSON.stringify({'msg': 'game_update_ok'}));
+            });
         }
-
-        Data.where({ 'userId': userId }).findOne(function (err, data) {
-            console.log(userId);
-            data.path.push(pos);
-            data.save();
-        });
-
-        io.sockets.emit({
-            userId: [pos]
-        });
-
-        res.end();
     });
 
 });
