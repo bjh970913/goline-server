@@ -8,7 +8,7 @@ var Room = require('../database/room');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    res.render('index', { title: -1 });
+    res.render('index', { roomId: -1 });
 });
 
 router.get('/mongoT', function(req, res, next) {
@@ -20,7 +20,7 @@ router.get('/mongoT', function(req, res, next) {
 });
 
 router.get('/play', function(req, res, next) {
-    res.render('index', { title: -1 });
+    res.render('index', { roomId: -1 });
 });
 
 /* Create room */
@@ -53,7 +53,7 @@ router.post('/join', function(req, res, next) {
         }
         if(room) {
             room.users.push(user_id);
-            res.render('index', { title: room.roomId});
+            res.render('index', { roomId: room.roomId});
         }
     });
 });
