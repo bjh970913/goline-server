@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    <title>ÃˆÂ¥ÂµÂ·Ã†Ã„Â±Â«Â¸ÃÂ°Â¢</title>
+    <title>???¡¤¨¡?¡¾?¢¬?¡Æ?</title>
     <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=ZOlpHCCyGnMnV9cIBlrH"></script>
 </head>
 <body>
@@ -12,79 +12,13 @@
 
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 <script>
-
 var position = new naver.maps.LatLng(37.3595704, 127.105399);
-
-// (ë¶ˆí•„ìš”) ê¸°ì¡´ì˜ ì„ ë“¤ì„ ë³´ê´€í•˜ê¸° ìœ„í•œ ë³€ìˆ˜
+// (ºÒÇÊ¿ä) ±âÁ¸ÀÇ ¼±µéÀ» º¸°üÇÏ±â À§ÇÑ º¯¼ö
 var lines = {};
 var polygons = {};
-
-
 var map = new naver.maps.Map('map', {
     center: position,
     zoom: 20
-});
-
-var a = new Array();
-
-a[0] = new naver.maps.Polygon({
-    map: map,
-    paths: [[]],
-    fillColor: '#ff0000',
-    fillOpacity: 0.3,
-    strokeColor: '#ff0000',
-    strokeOpacity: 0.6,
-    strokeWeight: 3,
-    clikable: true
-});
-a[1] = new naver.maps.Polygon({
-    map: map,
-    paths: [[]],
-    fillColor: '#708090',
-    fillOpacity: 0.3,
-    strokeColor: '#708090',
-    strokeOpacity: 0.6,
-    strokeWeight: 3,
-    clikable: true
-});
-
-var count = 0;
-
-naver.maps.Event.addListener(map, 'click', function(e) {
-    count++;
-    if(count<=5){
-    var point = e.coord;
-
-    var path = a[0].getPaths().getAt(0);
-    path.push(point);
-
-    var circle = new naver.maps.Circle({
-    map: map,
-    center: point,
-    radius: 1,
-    fillColor: 'crimson',
-    fillOpacity: 0.8
-    });
-    }
-    else{
-    
-    var point = e.coord;
-
-    var path = a[1].getPaths().getAt(0);
-    path.push(point);
-
-    var circle1 = new naver.maps.Circle({
-    map: map,
-    center: point,
-    radius: 1,
-    fillColor: 'blue',
-    fillOpacity: 0.8
-    });
-
-    
-
-
-    }
 });
 
 
@@ -92,8 +26,8 @@ naver.maps.Event.addListener(map, 'click', function(e) {
  * update_line(user_id, points)
  *
  * params:
- *   user_id : ìœ ì €ì˜ ê³ ìœ ID
- *   points : ìƒˆë¡œ ì¶”ê°€ëœ ì ë“¤ì˜ ë¦¬ìŠ¤íŠ¸
+ *   user_id : À¯ÀúÀÇ °íÀ¯ID
+ *   points : »õ·Î Ãß°¡µÈ Á¡µéÀÇ ¸®½ºÆ®
  * 
  * example:
  *   user_id = "A93R3R9RWQ"
@@ -102,17 +36,45 @@ naver.maps.Event.addListener(map, 'click', function(e) {
  *       {'latitude': 37.1232, 'longitude': 128.1236}
  *   ]
  * */
-function update_line(user_id, points) {
-	// TOOD: Update map overlays
+
+var userList = new Array();
+var user = new Object();
+var num;
+
+function CheckUserList(value) {
+    for (var i = 0; i < userList.length; i++) {
+        if (userList[i].id == value) {
+            return true;
+        }
+    }
+    return false;
 }
 
+function update_line(user_id, points) {
+    if (!CheckUserList(user_id)) {
+        user.id = user_id;
+        user.color = "#" + Math.round(Math.random() * 0xFFFFFF).toString(16);
+        num = 0;
+    }
+    var polyline = new naver.maps.Polyline({
+        map: map,
+        path: [],
+        strokeColor: userList[num].color,
+        strokeWeight: 2
+    });
 
+
+    for (var i = 0; i < points.length; i++) {
+        var path = polyline.getPath();
+        path.push(points);
+    }
+}
 /* *
  * update_polygon(user_id, points)
  *
  * params:
- *   user_id : ìœ ì €ì˜ ê³ ìœ ID
- *   points : Polygonì„ êµ¬ì„±í•˜ëŠ” ëª¨ë“  ì ë“¤ì˜ List
+ *   user_id : À¯ÀúÀÇ °íÀ¯ID
+ *   points : PolygonÀ» ±¸¼ºÇÏ´Â ¸ğµç Á¡µéÀÇ List
  * 
  * example:
  *   user_id = "A93R3R9RWQ"
@@ -124,34 +86,51 @@ function update_line(user_id, points) {
  *       {'latitude': 37.1237, 'longitude': 128.1226}
  *   ]
  * */
+
+
+
 function update_polygon(user_id, points) {
-	// TOOD: Update map overlays
+    if (!CheckUserList(user_id)) {
+        user.id = user_id;
+        user.color = "#" + Math.round(Math.random() * 0xFFFFFF).toString(16);
+        num = 0;
+    }
+    var polygon = new naver.maps.Polygon({
+        map: map,
+        paths: [[]],
+        fillColor: userList[num].color,
+        fillOpacity: 0.3,
+        strokeColor: userList[num].color,
+        strokeOpacity: 0.6,
+        strokeWeight: 3,
+        clikable: true
+    });
+
+    for (var i = 0; i < points.length; i++) {
+        var path = polygon.getPaths().getAt(0);
+        path.push(points);
+    }
+
 }
-
-
 var socket = io('http://goline.heek.kr');
-
 socket.on('update', function(data) {
 	for (user_id in data) {
 		Array.prototype.push.apply(lines[user_id], data[uesr_id]);
 		update_line(user_id, data[user_id]);
 	}
 });
-
 socket.on('update_polygon', function(data) {
 	for (user_id in data) {
 		lines[user_id].push(data[uesr_id]);
 		update_polygon(user_id, data[user_id]);
 	}
 });
-
 socket.on('game_over', function(data) {
 	for (i in data) {
 		// data[i]
-		// TODO: Androidì— ê²Œì„ì˜¤ë²„ ì•Œë¦¼ (+ê²Œì„ì˜¤ë²„í™”ë©´)
+		// TODO: Android¿¡ °ÔÀÓ¿À¹ö ¾Ë¸² (+°ÔÀÓ¿À¹öÈ­¸é)
 	}
 });
-
 </script>
 </body>
 </html>
