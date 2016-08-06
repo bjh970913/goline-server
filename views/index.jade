@@ -16,7 +16,7 @@ block content
         var user_id = hash.substr(hash.indexOf('user_id=')).split('&')[0].split('=')[1];
         var room_id = hash.substr(hash.indexOf('room_id=')).split('&')[0].split('=')[1];
 
-        var colors = [];
+        var colors = ['#009688','#8bc34a','#f44336','#ffc107','#ff5722','#9e9e9e','#e91e63','#9c27b0','#673ab7','#3f51b5'];
 
         var position = new naver.maps.LatLng(37.5078074, 127.0451858);
 
@@ -38,12 +38,14 @@ block content
 
             var pos = new naver.maps.LatLng(data.pos['latitude'], data.pos['longitude']);
 
+            var color = colors.pop();
+
             if (paths[userId]==undefined) {
                 console.log('create new path');
                 paths[userId] = new naver.maps.Polyline({
                     map: map,
                     path: [],
-                    strokeColor: '#5347AA',
+                    strokeColor: color,
                     strokeWeight: 2
                 });
             }
