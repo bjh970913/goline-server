@@ -9,6 +9,7 @@ var roomSchema = mongoose.Schema({
         'default': shortid.generate
     },
     users: Array,
+    score: Array,
     bound: {},
     time : {
         type : Date,

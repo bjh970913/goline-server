@@ -145,6 +145,8 @@ block content
                 var score = polygon.getAreaSize();
                 if (!score) score = 0;
                 socket.emit('end', {'score': score, 'userId': user_id});
+
+                setInterval(function(){socket.emit('getScore');}, 1000);
             }
         });
 

@@ -64,6 +64,8 @@ router.post('/join', function(req, res, next) {
             Data.where({'userId': userId}).findOne(function(err, data){
                 if (!err) {
                     data.path=[];
+                    data.complete = false;
+                    data.score=0;
                     data.save();
                 } else {
                     var data = new Data({userId: userId, path:[]});
@@ -100,7 +102,7 @@ router.post('/update', function(req, res, next) {
             if (time>= 10) {
                 data.score = 0;
                 data.save();
-            } else {
+            } else if(data.complete==false) {
                 data.path.push(pos);
                 data.save();
 
@@ -161,6 +163,11 @@ io.on('connection', function(socket) {
         var score = data.score;
         Data.where({'userId': userId}).findOne(function(err, data){
             data.score = score;
+            data.save();
+        });
+
+        Room.where({ 'roomId': socket.ID }).findOne(function (err, room) {
+            data.score.push({'userId': userId, 'score': score});
             data.save();
         });
     });
